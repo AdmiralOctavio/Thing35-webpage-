@@ -1,0 +1,66 @@
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  800
+);
+var texture = new THREE.TextureLoader().load("bananasans.jpg");
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+var cube = new THREE.Mesh(geometry, texture);
+//scene.add(cube);
+var geo = new THREE.EdgesGeometry(cube.geometry);
+var mat = new THREE.LineBasicMaterial({
+  color: 0x000000,
+  linewidth: 10000
+});
+var wireframe = new THREE.LineSegments(geo, mat);
+cube.add(wireframe);
+
+var geometry2 = new THREE.SphereGeometry(3, 8, 8, 0, 6.3, 0, 3.1);
+var material2 = new THREE.MeshBasicMaterial({ color: 0xff3333 });
+var sphere = new THREE.Mesh(geometry2, material2);
+//scene.add(sphere);
+
+var geo2 = new THREE.EdgesGeometry(sphere.geometry);
+var mat2 = new THREE.LineBasicMaterial({
+  color: 0x000000,
+  linewidth: 1
+});
+var wireframe2 = new THREE.LineSegments(geo2, mat2);
+//sphere.add(wireframe2);
+
+var loader = new THREE.FontLoader();
+loader.load("ComicSans.json", function(font) {
+  var mesh = new THREE.MeshBasicMaterial({
+    color: 0xffff00,
+    opacity: 0.8,
+    side: THREE.DoubleSide
+  });
+
+  var shapes = font.generateShapes("sad", 100);
+  var geo3 = new THREE.ShapeBufferGeometry(shapes);
+  var text = new THREE.Mesh(geo3, mesh);
+  text.position.z = 15;
+  scene.add(text);
+});
+camera.position.z = 10;
+
+function animate() {
+  scene.background = new THREE.Color(0xff0000);
+  requestAnimationFrame(animate);
+
+  cube.rotation.x += 0.005;
+  cube.rotation.y += 0.005;
+  cube.rotation.z += 0.005;
+
+  sphere.rotation.x += 0.005;
+  sphere.rotation.y += 0.005;
+  sphere.rotation.z += 0.005;
+  renderer.render(scene, camera);
+}
+animate();
